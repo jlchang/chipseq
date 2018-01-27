@@ -1,0 +1,34 @@
+new
+genome hg19
+snapshotDirectory /btl/analysis/ChIPseq/mapq1/SSF-XXXXX/hiseq/v1/SSF-XXXXX_IGV
+load /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.bb
+maxPanelHeight 40
+goto chr19:34848645-34858645
+snapshot SSF-XXXXX_GPI.png
+goto chr3:128437979-128447979
+snapshot SSF-XXXXX_RAB7A.png
+goto chr22:24944618-24954618
+snapshot SSF-XXXXX_SNRPD3.png
+goto chr1:24011269-24021269
+snapshot SSF-XXXXX_RPL11.png
+goto chr12:6636571-6646571
+snapshot SSF-XXXXX_GAPDH.png
+goto chr1:154190273-154200273
+snapshot SSF-XXXXX_C1orf43.png
+goto chr19:59063491-59073491
+snapshot SSF-XXXXX_CHMP2A.png
+goto chr15:34391053-34401053
+snapshot SSF-XXXXX_EMC7.png
+goto chr1:36104445-36114445
+snapshot SSF-XXXXX_PSMB2.png
+goto chr1:151371412-151381412
+snapshot SSF-XXXXX_PSMB4.png
+goto chr5:112255031-112265031
+snapshot SSF-XXXXX_REEP5.png
+goto chr9:35069739-35079739
+snapshot SSF-XXXXX_VCP.png
+goto chr12:110936945-110946945
+snapshot SSF-XXXXX_VPS29.png
+goto chr13:45912419-45922419
+snapshot SSF-XXXXX_TPT1.png
+exit
