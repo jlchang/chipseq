@@ -17,7 +17,7 @@ expt=${ssf}_${type}_${suffix}
 result=${expt}.metrics_p5.1
 
 
-SCRIPTDIR="/cil/shed/sandboxes/jlchang/notebook/scripts/ChIPseq/paired/v0.05"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
 
 #if [ -e ${result} ]
 #  then

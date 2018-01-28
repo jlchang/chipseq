@@ -13,7 +13,7 @@ orig=`pwd`
 source /broad/software/scripts/useuse
 use UGER
 
-SCRIPTDIR="/cil/shed/sandboxes/jlchang/notebook/scripts/ChIPseq/paired/v0.05"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
 
 set -e
 echo "analysis directory is $orig"

@@ -12,7 +12,7 @@ orig=`pwd`
 
 
 
-SCRIPTDIR="/cil/shed/sandboxes/jlchang/notebook/scripts/ChIPseq/paired/v0.04"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
 
 fail=0
 while IFS=$'\t': read sample fastq1 fastq2
