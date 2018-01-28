@@ -17,7 +17,7 @@ reuse -q .java-jdk-1.8.0_121-x86-64
 reuse -q .bedtools-2.26.0
 reuse -q .r-3.3.0
 
-SCRIPTDIR="/cil/shed/sandboxes/jlchang/notebook/scripts/ChIPseq/paired/v0.05"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/prod"
 
 # set to print each command and exit script if any command fails
 set -euxo pipefail

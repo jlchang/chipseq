@@ -12,7 +12,7 @@
 set -euo pipefail
 
 
-SCRIPTDIR="/cil/shed/sandboxes/jlchang/notebook/scripts/ChIPseq/paired/v0.05"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/prod"
 
 orig=$(pwd)
 suffix=$(basename $orig)
