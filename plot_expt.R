@@ -33,18 +33,23 @@ stringsAsFactors = TRUE
 outfile <- paste(args[2], "reads.pdf", sep="_")
 
 if (args[1]=="miseq") {
-    pdf(outfile)
-    ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + geom_bar(stat="identity", fill = "grey", colour = "black") + 
-    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads), stat = "identity", fill = "grey", colour = "blue") +
+    print(paste("generating miseq plot", outfile))
+    read_plot <- ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + 
+    geom_bar(stat="identity", fill = "grey", colour = "black") + 
+    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads),
+    stat = "identity", fill = "grey", colour = "blue") + 
     theme(axis.text.x = element_text(size=5, angle = 90, hjust = 1)) 
-    dev.off()
+    ggsave(outfile, plot=read_plot)
 } else { if (args[1]=="hiseq") {
-    pdf(outfile)
-    ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + geom_bar(stat="identity", fill = "grey", colour = "black") + 
-    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads), stat = "identity", fill = "grey", colour = "blue") +
+    print(paste("generating hiseq plot", outfile))
+    read_plot <- ggplot(data=df, 
+    aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) +
+    geom_bar(stat="identity", fill = "grey", colour = "black") +
+    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads),
+    stat = "identity", fill = "grey", colour = "blue") + 
     theme(axis.text.x = element_text(size=5, angle = 90, hjust = 1)) + 
-    geom_hline(yintercept=10000000, colour ="red") 
-    dev.off()
+    geom_hline(yintercept=10000000, colour ="red")
+    ggsave(outfile, plot=read_plot)
     
     #create sampleByFRiP.txt
     df %>% arrange(mapq1PE_FRIP) %>% select(Sample, mapq1PE_FRIP) %>% write.table(file = 'sampleByFRiP.txt', row.names = FALSE, sep = "\t", quote = FALSE, col.names = FALSE)
