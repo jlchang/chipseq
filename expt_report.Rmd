@@ -1,0 +1,94 @@
+---
+title: "ChIPSeq MiSeq QC"
+output:
+  pdf_document: default
+date: "February 5, 2018"
+params:
+  ssf: SSF-12509
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(hms)
+library(tidyverse)
+library(scales)
+library(knitr)
+
+
+df <- read.table(
+file = "SSF-12509_miseq_v1.metrics_p5.1",
+sep="\t",
+header=T,
+stringsAsFactors = TRUE
+)
+
+samples <- df %>% filter(Ctrl=="no")
+```
+
+
+## Sample representation for ``r params$ssf``
+
+Batch size: `r nrow(df)`  
+&#35; samples in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="no") %>% nrow()`  
+&#35; controls in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="yes") %>% nrow()`  
+
+## H3K27ac FRiP stratification (samples only) for ``r params$ssf``
+
+```{r stratified_FRiP, echo=FALSE}
+df2 <- df %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf), labels=c("<3%","3%<X<5%", "5%<X<10%",">10%")))
+
+kable(df2 %>% filter(Ctrl=="no") %>% group_by(fcat) %>% summarize (n = n()) %>% mutate(pct_fcat = percent(n/sum(n))))
+```
+
+## Results from Controls
+
+```{r controls, echo=FALSE}
+
+kable(df %>% filter(Ctrl=="yes") %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)) %>% select(Sample, H3K27ac_FRiP, Tot_Reads))
+```
+
+## Evaluation of total reads for ``r params$ssf``
+
+Total reads: `r format(sum(df$Tot_Reads), big.mark = ",")`  
+Avg reads (all): `r format(round(mean(df$Tot_Reads)), scientific=FALSE, big.mark = ",")`  
+Avg reads (samples only): `r format(round(df %>% filter(Ctrl=="no")  %>% select(Sample, Tot_Reads) %>%  summarize(mean(Tot_Reads))), scientific=FALSE, big.mark = ",")`  
+
+
+## Distribution of Total Reads
+
+```{r Tot_Reads_plot, echo=FALSE}
+plot(ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + geom_bar(stat="identity", fill = "grey", colour = "black") + 
+    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads), stat = "identity", fill = "grey", colour = "blue") +
+    theme(axis.text.x = element_text(size=5, angle = 90, hjust = 1)) )
+```
+
+
+
+## Duplication rate
+
+Average duplication rate (all): `r percent(mean(df$pDUPLICATION))`  
+sample only duplication rate: `r percent(mean(samples$pDUPLICATION))`  
+
+
+&#35; samples with >0.5% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.005) %>% nrow()`  
+&#35; samples with >1% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.01) %>% nrow()`  
+
+samples with >0.5% duplication:
+```{r DUP_gt_1pct, echo=FALSE}
+df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION > 0.005) %>% arrange(desc(pDUPLICATION)) %>% mutate(pDUP = percent(pDUPLICATION)) %>% select(Sample, pDUP) 
+``` 
+
+## Adapter rate (R1)
+
+Average adapter rate (all): `r percent(mean(df$R1_ADAPTER))`  
+sample-only adapter rate: `r percent(mean(samples$R1_ADAPTER))`  
+&#35; samples with > 2% adapter: `r df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER>=0.02) %>% nrow()`  
+&#35; samples with > 5% adapter: `r df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER>=0.05) %>% nrow()`  
+
+samples with >2% adapter:
+```{r , echo=FALSE}
+df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER > 0.02) %>% arrange(desc(R1_ADAPTER)) %>% mutate(Adapter = percent(R1_ADAPTER)) %>% select(Sample, Adapter) 
+```
+
+
