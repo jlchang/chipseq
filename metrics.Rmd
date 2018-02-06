@@ -3,6 +3,8 @@ title: "ChIPseq metrics"
 output:
   pdf_document: default
 date: "February 5, 2018"
+params:
+  input: /btl/analysis/ChIPseq/mapq1/analysis/20180205/hiseq.metrics
 ---
 
 ```{r setup, include=FALSE}
@@ -11,8 +13,10 @@ knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
 library(hms)
 library(tidyverse)
+
+
 df <- read.table(
-file = "all.metrics",
+file = params$input,
 sep="\t",
 header=T,
 stringsAsFactors = TRUE
