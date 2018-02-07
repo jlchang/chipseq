@@ -2,9 +2,9 @@
 title: "ChIPSeq MiSeq QC"
 output:
   pdf_document: default
-date: "February 5, 2018"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
 params:
-  ssf: SSF-12509
+  input: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,25 +15,29 @@ library(tidyverse)
 library(scales)
 library(knitr)
 
-
 df <- read.table(
-file = "SSF-12509_miseq_v1.metrics_p5.1",
+file = params$input,
 sep="\t",
 header=T,
 stringsAsFactors = TRUE
 )
 
+
+parsed_input <- strsplit(basename(params$input), "_")
+
+ssf <- parsed_input[[1]][1]
+
 samples <- df %>% filter(Ctrl=="no")
 ```
 
 
-## Sample representation for ``r params$ssf``
+## Sample representation in ``r basename(params$input)``
 
 Batch size: `r nrow(df)`  
 &#35; samples in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="no") %>% nrow()`  
 &#35; controls in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="yes") %>% nrow()`  
 
-## H3K27ac FRiP stratification (samples only) for ``r params$ssf``
+## H3K27ac FRiP stratification (samples only) 
 
 ```{r stratified_FRiP, echo=FALSE}
 df2 <- df %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf), labels=c("<3%","3%<X<5%", "5%<X<10%",">10%")))
@@ -48,7 +52,7 @@ kable(df2 %>% filter(Ctrl=="no") %>% group_by(fcat) %>% summarize (n = n()) %>% 
 kable(df %>% filter(Ctrl=="yes") %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)) %>% select(Sample, H3K27ac_FRiP, Tot_Reads))
 ```
 
-## Evaluation of total reads for ``r params$ssf``
+## Evaluation of total reads 
 
 Total reads: `r format(sum(df$Tot_Reads), big.mark = ",")`  
 Avg reads (all): `r format(round(mean(df$Tot_Reads)), scientific=FALSE, big.mark = ",")`  

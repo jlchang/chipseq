@@ -2,9 +2,9 @@
 title: "ChIPseq metrics"
 output:
   pdf_document: default
-date: "February 5, 2018"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
 params:
-  input: /btl/analysis/ChIPseq/mapq1/analysis/20180205/hiseq.metrics
+  input: default
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +30,7 @@ stringsAsFactors = TRUE
 )
 
 #To add dates, need to separate Analysis into it's SSF and its analysis_label
-df2 <- df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "label" ), sep = "_" )
+df2 <- df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" )
 
 library(hms)
 expt_date2 <- expt_date %>% mutate(Date = parse_date(Date, "%m/%d/%y"))
@@ -40,28 +40,77 @@ df3 <- left_join(df2, expt_date2, by = "SSF")
 df4 <- df3 %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf), labels=c("<3%","3%<X<5%", "5%<X<10%",">10%")))
 
 samples <- df4 %>% filter(Ctrl=="no") %>% mutate(pctA = MAPQ1_Reads/Tot_Reads)
+
+hiseq <- samples %>% filter(type=="hiseq")
+
+miseq <- samples %>% filter(type=="miseq")
+
 ```
 
-## H3K27ac FRiP over time (samples only)
+## H3K27ac FRiP over time (all plots are samples only, no controls)
 
 ```{r FRiP}
-plot(ggplot(data=samples, aes(y=mapq1PE_FRIP, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1)))
+ggplot(data=samples, aes(y=mapq1PE_FRIP, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-## Total Reads
+## Stratified H3K27ac FRiP 
 
-```{r Tot_Reads, echo=FALSE}
-ggplot(data=samples, aes(y=Tot_Reads, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```{r Strat_FRiP}
+ggplot(samples, aes(x=reorder(Expt,Date), fill=fcat)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+````
+
+## Total Reads (hiseq)
+
+```{r hiseq_tot_Reads, echo=FALSE}
+ggplot(data=hiseq, aes(y=Tot_Reads, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-## Duplication Rate
+## Total Reads (miseq)
+
+```{r miseq_tot_Reads, echo=FALSE}
+ggplot(data=miseq, aes(y=Tot_Reads, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Duplication Rate (all)
 
 ```{r pDup, echo=FALSE}
 ggplot(data=samples, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-## R1_adapter Rate
+
+## Duplication Rate (hiseq)
+
+```{r hiseq_pDup, echo=FALSE}
+ggplot(data=hiseq, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+## Duplication Rate (miseq)
+
+```{r miseq_pDup, echo=FALSE}
+ggplot(data=miseq, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (all)
 
 ```{r adapter, echo=FALSE}
 ggplot(data=samples, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (hiseq)
+
+```{r hiseq_adapter, echo=FALSE}
+ggplot(data=hiseq, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (miseq)
+
+```{r miseq_adapter, echo=FALSE}
+ggplot(data=miseq, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Percent reads analyzed (all)
+
+```{r pct_analyzed, echo=FALSE}
+ggplot(data=samples, aes(y=pctA, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
