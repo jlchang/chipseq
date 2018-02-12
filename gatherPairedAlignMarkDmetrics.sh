@@ -67,11 +67,27 @@ mperip=$(cat ${sample}.mapq1.PE.nodup.H3K27ac.rip)
 
 mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
 
-#Phantom peak quality metrics
+#Phantom peak quality metrics, if it ran
 
-NSC=$(cut -f 9 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
-RSC=$(cut -f 10 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
-QT=$(cut -f 11 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+  NSC=$(cut -f 9 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+else
+  NCS="N/A"
+fi
+
+if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+  RSC=$(cut -f 10 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+else
+  RCS="N/A"
+fi
+
+if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+  QT=$(cut -f 11 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+else
+  QT="N/A"
+fi
+
+
 
 pctAn=$(echo "scale=4; $MR/$TR" | bc)
 

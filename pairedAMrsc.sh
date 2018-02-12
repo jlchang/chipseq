@@ -215,7 +215,7 @@ TAG_ALIGN_PREFIX="${RAW_MAPQ_PREFIX}.PE2SE.nodup"
 BEDPE_FILE="${TAG_ALIGN_PREFIX}.bedpe.gz"
 FULL_TAG_ALIGN_FILE="${TAG_ALIGN_PREFIX}.tagAlign.gz"
 SUBSAMPLE_TAG_ALIGN_FILE="${TAG_ALIGN_PREFIX}.15M.tagAlign.gz"
-SUBSAMPLE_QC="${TAG_ALIGN_PREFIX}.15M.tagAlign.qc"
+
 
 samtools sort -n ${PAIRED_MAPQ_FILE} -o ${PAIRED_MAPQ_NMSRT_FILE}
 
@@ -232,17 +232,24 @@ rm ${PAIRED_MAPQ_NMSRT_FILE}
 # Phantom Peak Quality Tools
 # =============
 
+SUBSAMPLE_QC="${TAG_ALIGN_PREFIX}.15M.tagAlign.qc"
+
+#PPQT fails if insufficient reads- want metrics, so ignore failures
+set +e
 Rscript $SCRIPTDIR/run_spp.R -c=${SUBSAMPLE_TAG_ALIGN_FILE} -savp -out=${SUBSAMPLE_QC}
 
 sed -r 's/,[^\t]+//g' ${SUBSAMPLE_QC} > subsample.tmp
 mv subsample.tmp ${SUBSAMPLE_QC}
+
 
 # =============
 # gather metrics
 # =============
 
 Rscript $SCRIPTDIR/processMapqCounts.R
+set -e
 
+#metrics script rewritten to supply "N/A" if no PPTQ output
 $SCRIPTDIR/gatherPairedAlignMarkDmetrics.sh $1 > $1.Metrics
 
 
