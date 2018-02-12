@@ -13,7 +13,7 @@
 set -euo pipefail
 
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 orig=$(pwd)
 suffix=$(basename $orig)

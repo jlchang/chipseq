@@ -17,7 +17,7 @@ expt=${ssf}_${type}_${suffix}
 result=${expt}.metrics_p5.1
 
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 #if [ -e ${result} ]
 #  then

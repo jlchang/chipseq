@@ -12,7 +12,7 @@ orig=`pwd`
 
 
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 fail=0
 while IFS=$'\t': read sample fastq1 fastq2
