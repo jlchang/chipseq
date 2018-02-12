@@ -4,7 +4,7 @@ output:
   pdf_document: default
 date: '`r format(Sys.Date(), "%B %d, %Y")`'
 params:
-  input: default
+  input: all.metrics
 ---
 
 ```{r setup, include=FALSE}
