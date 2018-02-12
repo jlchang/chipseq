@@ -67,6 +67,26 @@ plot(ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + geom_ba
     theme(axis.text.x = element_text(size=5, angle = 90, hjust = 1)) )
 ```
 
+```{r check_excess_reads, echo=FALSE}
+
+outlier_samples <- df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% nrow()
+if ( outlier_samples==0) {
+  excess_reads <- FALSE
+} else {
+  excess_reads <- TRUE
+}
+
+```
+
+```{r excess_reads, echo=FALSE, eval=excess_reads}
+cat("jackpot samples")
+df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% select(Sample,Tot_Reads)
+
+lost_reads <- df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% mutate(lost = Tot_Reads-(mean(df$Tot_Reads))) %>% select(Sample,lost) %>% summarize(sum(lost))
+
+cat("Approx `r round(lost_reads/sum(df$Tot_Reads)*100, digits=1)`% of reads are "excess reads" for jackpot sample(s)")
+```
+
 
 
 ## Duplication rate
