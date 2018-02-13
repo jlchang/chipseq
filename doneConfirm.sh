@@ -22,7 +22,7 @@ do
     head -n 1 ${sample}_PE/${sample}.raw.cleaned.flagstat
 #echo "$sample" >> fails.txt
   fi
-  if grep 'N/A' ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc
+  if [ ! -s ${sample}_PE/${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]
   then
     echo "PPQT failed on ${sample}"
     PPQT=$((PPQT+1))

@@ -6,11 +6,18 @@
 #
 ######################
 
-
 #!/bin/bash
 
 #sample="F05-CD-H3K27ac"
 sample=$1
+
+# if no arguments supplied, complain 
+if [  ! -e ${sample}.raw.cleaned.flagstat ] 
+then 
+    echo "please supply valid sample name"
+    exit 1
+fi 
+
 
 #Total Reads
 TR=$(head -1 ${sample}.raw.cleaned.flagstat | cut -d " " -f 1)
@@ -69,47 +76,27 @@ mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
 
 #Phantom peak quality metrics, if it ran
 
-if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
-  NSC=$(cut -f 9 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+  normSC=$(cut -f 9 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
-  NCS="N/A"
+  normSC="N/A"
 fi
 
-if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
-  RSC=$(cut -f 10 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
+if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+  relSC=$(cut -f 10 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
-  RCS="N/A"
+  relSC="N/A"
 fi
 
-if [ -e ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
+if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
   QT=$(cut -f 11 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
   QT="N/A"
 fi
 
 
-
 pctAn=$(echo "scale=4; $MR/$TR" | bc)
 
-#mapq quantitation inaccurate, removing as metric (20171214)
-#map0
-#mapq0=$(sed -n "1p" ${sample}.raw.cleaned.bam.below_Mapq30.count.bin | grep mapq0 | cut -f 2)
-
-#map5
-#mapq5=$(sed -n "2p" ${sample}.raw.cleaned.bam.below_Mapq30.count.bin | grep mapq5 | cut -f 2)
-
-#map10
-#mapq10=$(sed -n "3p" ${sample}.raw.cleaned.bam.below_Mapq30.count.bin | grep mapq10 | cut -f 2)
-
-#map28
-#mapq28=$(sed -n "7p" ${sample}.raw.cleaned.bam.below_Mapq30.count.bin | grep mapq28 | cut -f 2)
-
-#map29
-#mapq29=$(sed -n "8p" ${sample}.raw.cleaned.bam.below_Mapq30.count.bin | grep mapq29 | cut -f 2)
-
-#echo -e "Tot_Reads\tMAPQ0_Reads\tmapq0PE_rip\tmapq0PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads\tmapq0_Reads\tmapq5_Reads\tmapq10_Reads\tmapq28_Reads\tmapq29_Reads"
-#echo -e "$TR\t$MR\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$MRR\t$PP\t$sing\t$mmdc\t$pdup\t$mapq0\t$mapq5\t$mapq10\t$mapq28\t$mapq29"
-
 echo -e "Tot_Reads\tMAPQ1_Reads\tpctAnalyzed\tmapq1PE_rip\tmapq1PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tRSC\tNSC\tQT\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads"
-echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$RSC\t$NSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup"
+echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup"
 
