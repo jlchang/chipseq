@@ -13,7 +13,7 @@ orig=`pwd`
 source /broad/software/scripts/useuse
 use UGER
 
-SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
 
 set -e
 echo "analysis directory is $orig"
