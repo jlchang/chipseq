@@ -11,9 +11,6 @@
 orig=`pwd`
 
 
-
-SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 fail=0
 PPQT=0
 while IFS=$'\t': read sample fastq1 fastq2
