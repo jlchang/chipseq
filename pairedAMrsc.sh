@@ -257,4 +257,4 @@ $SCRIPTDIR/gatherPairedAlignMarkDmetrics.sh $1 > $1.Metrics
 # declare DONE
 # =============
 
-touch DONE
+touch DONE_DEV
