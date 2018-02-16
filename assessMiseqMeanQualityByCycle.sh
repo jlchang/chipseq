@@ -34,13 +34,16 @@ else
     dataPath=$1
 fi
 
+runFolder=$(basename $(dirname $(dirname $(dirname "${dataPath}"))))
+flowcell=$(echo "$runFolder" | awk -f- '{print $nf}')
+
 #check if output prefix supplied
 if [  $# -lt 2 ]
 then
-    output_prefix=""
+    output_prefix="${flowcell}_"
 else
+    output_prefix="${2}_${flowcell}_"
     echo "using $2 as prefix for output files"
-    output_prefix="${2}_"
 fi
 
 #check if fastq files exist at supplied path
@@ -78,4 +81,4 @@ java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar  MeanQualityByCyc
 	CHART=${output_prefix}unalignedBam_mean_qual_by_cycle.pdf
 
 rm unaligned.bam
-Rscript $SCRIPTDIR/identifyMeanQualityByCycles.R "${output_prefix}" > ${output_prefix}_below_30_qual_by_cycle_report.txt
+Rscript $SCRIPTDIR/identifyMeanQualityByCycles.R "${output_prefix}" > ${output_prefix}below_30_qual_by_cycle_report.txt
