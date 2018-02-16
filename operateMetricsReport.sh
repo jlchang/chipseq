@@ -38,6 +38,7 @@ a_date=$(date +%Y%m%d)
 a_dir=${1}/${a_date}
 if [ -d "$a_dir" ]; then
   echo "analysis directory already exists! exiting..."
+  exit 1
 else
   mkdir $a_dir
 fi
