@@ -10,9 +10,12 @@
 
 orig=`pwd`
 
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
 
 fail=0
 PPQT=0
+all=$(wc -l input_data.tsv)
+echo "Assessing $all samples:"
 while IFS=$'\t': read sample fastq1 fastq2
 do
   if [ ! -e ${sample}_PE/DONE_DEV ]
@@ -31,3 +34,10 @@ done < input_data.tsv
 
 echo "fails = $fail"
 echo "PPQT N/A= $PPQT"
+if [[ $fails -gt 0 ]]
+then
+  echo "Failed samples should be rerun or removed from input_data.tsv before metrics file is created"
+  exit
+fi
+
+${SCRIPTDIR}/collectExptMetrics.sh
