@@ -1,8 +1,8 @@
 ######################
 #
-#  runPairedAlign.sh
+#  runPairedAMrsc.sh
 #
-#  for samples in input_data.tsv, run pairedAlignMarkD.sh for each sample
+#  for samples in input_data.tsv, run pairedAMrsc.sh for each sample
 #
 ######################
 
