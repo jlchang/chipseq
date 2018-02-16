@@ -45,6 +45,15 @@ df2 <- df %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf)
 kable(df2 %>% filter(Ctrl=="no") %>% group_by(fcat) %>% summarize (n = n()) %>% mutate(pct_fcat = percent(n/sum(n))))
 ```
 
+## Mean values of key metrics (samples only)
+
+```{r MetricsMeans, echo=FALSE}
+means_df <- df %>% filter(Ctrl=="no") %>% select(pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+
+kable(means_df, row.names = FALSE)
+```
+
+
 ```{r check_controls, echo=FALSE}
 
 ctrl_num <- df %>% select(Sample, Ctrl) %>% filter(Ctrl=="yes") %>% nrow()
@@ -67,7 +76,7 @@ kable(df %>% filter(Ctrl=="yes") %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)
 Total reads: `r format(sum(df$Tot_Reads), big.mark = ",")`  
 Avg reads (all): `r format(round(mean(df$Tot_Reads)), scientific=FALSE, big.mark = ",")`  
 Avg reads (samples only): `r format(round(df %>% filter(Ctrl=="no")  %>% select(Sample, Tot_Reads) %>%  summarize(mean(Tot_Reads))), scientific=FALSE, big.mark = ",")`  
-
+Avg mapq1 reads (samples only): `r format(round(df %>% filter(Ctrl=="no")  %>% select(Sample, MAPQ1_Reads) %>%  summarize(mean(MAPQ1_Reads))), scientific=FALSE, big.mark = ",")` 
 
 ## Distribution of Total Reads
 
@@ -113,7 +122,8 @@ df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% select(S
 
 lost_reads <- df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% mutate(lost = Tot_Reads-(mean(df$Tot_Reads))) %>% select(Sample,lost) %>% summarize(sum(lost))
 
-cat("`r round(lost_reads/sum(df$Tot_Reads)*100, digits=1)`% of Hiseq run are "excess reads" for jackpot samples")
+percent_excess <- toString(round(lost_reads/sum(df$Tot_Reads)*100, digits=1))
+cat(percent_excess, '% of Hiseq run are excess reads for jackpot samples', sep = "")
 
 ```
 
