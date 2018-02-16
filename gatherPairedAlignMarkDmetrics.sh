@@ -64,9 +64,15 @@ R2A=$(sed -n "9p" ${sample}.raw.cleaned.casm  | awk '{ print $24 }')
 elcpr=$(sed -n "8p" ${sample}.raw.cleaned.elc  | awk '{ print $3 }')
 #PERCENT_DUPLICATION
 dup=$(sed -n "8p" ${sample}.raw.cleaned.elc  | awk '{ print $9 }')
+if [ -z "$dup" ]; then
+  dup="0"
+fi
+
 #ESTIMATED_LIBRARY_SIZE
 els=$(sed -n "8p" ${sample}.raw.cleaned.elc  | awk '{ print $10 }')
-
+if [ -z "$els" ]; then
+  els="N/A"
+fi
 
 #mapqPE_READS_in_H3K27ac_peaks
 mperip=$(cat ${sample}.mapq1.PE.nodup.H3K27ac.rip)
