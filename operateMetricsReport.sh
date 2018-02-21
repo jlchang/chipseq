@@ -39,6 +39,12 @@ set -o xtrace
 
 SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
 
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
+
 a_date=$(date +%Y%m%d)
 a_dir=${1}/${a_date}
 if [ -d "$a_dir" ]; then
