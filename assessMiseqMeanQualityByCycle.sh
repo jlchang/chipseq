@@ -34,8 +34,8 @@ else
     dataPath=$1
 fi
 
-runFolder=$(basename $(dirname $(dirname $(dirname "${dataPath}"))))
-flowcell=$(echo "$runFolder" | awk -f- '{print $nf}')
+runFolder=$(basename $(dirname $(dirname $(dirname "$(cat dataPath)"))))
+flowcell=$(echo "$runFolder" | awk -F"-" '{print $NF}')
 
 #check if output prefix supplied
 if [  $# -lt 2 ]
@@ -67,8 +67,8 @@ set -o pipefail
 set -o nounset
 set -o xtrace
 
-#cat ${dataPath}/*_R1_001.fastq.gz > R1_001.fastq.gz
-#cat ${dataPath}/*_R2_001.fastq.gz > R2_001.fastq.gz
+cat ${dataPath}/*_R1_001.fastq.gz > R1_001.fastq.gz
+cat ${dataPath}/*_R2_001.fastq.gz > R2_001.fastq.gz
 java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar FastqToSam \
 	F1=R1_001.fastq.gz \
 	F2=R2_001.fastq.gz \
@@ -79,6 +79,8 @@ java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar  MeanQualityByCyc
 	I=unaligned.bam \
 	O=${output_prefix}unalignedBam_mean_qual_by_cycle.txt \
 	CHART=${output_prefix}unalignedBam_mean_qual_by_cycle.pdf
-
+	
+rm R1_001.fastq.gz
+rm R2_001.fastq.gz
 rm unaligned.bam
 Rscript $SCRIPTDIR/identifyMeanQualityByCycles.R "${output_prefix}" > ${output_prefix}below_30_qual_by_cycle_report.txt
