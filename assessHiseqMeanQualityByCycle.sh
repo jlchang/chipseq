@@ -64,13 +64,13 @@ set -o xtrace
 
 
 
-#java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar FastqToSam \
+java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar FastqToSam \
 	F1=${dataPath}/${flowcell}.${lane}.1.fastq.gz \
 	F2=${dataPath}/${flowcell}.${lane}.2.fastq.gz \
 	O=unaligned.bam \
 	SM=MQBC
 
-#java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar  MeanQualityByCycle \
+java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar  MeanQualityByCycle \
 	I=unaligned.bam \
 	O=${output_prefix}unalignedBam_mean_qual_by_cycle.txt \
 	CHART=${output_prefix}unalignedBam_mean_qual_by_cycle.pdf
