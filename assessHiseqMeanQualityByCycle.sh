@@ -9,8 +9,6 @@
 
 #!/usr/bin/env bash
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
-
 display_usage() { 
 	echo -e "\nUsage: $0 <path> <optional:output file prefix> \n" 
 	echo "expected path format: /btl/data/walkup/ChIPSeq/SSF-#/data/<flowcell>/<run folder>/<lane>"
@@ -62,7 +60,17 @@ set -o pipefail
 set -o nounset
 set -o xtrace
 
+#check PIPE_LOC environment variable is set
+#https://stackoverflow.com/questions/307503
+: "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
 
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
+
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
 
 java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar FastqToSam \
 	F1=${dataPath}/${flowcell}.${lane}.1.fastq.gz \
