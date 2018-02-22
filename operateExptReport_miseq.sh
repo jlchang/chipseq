@@ -9,8 +9,6 @@
 
 #!/usr/bin/env bash
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/dev/v0.06"
-
 display_usage() { 
     echo -e "\nUsage: $0 \$(pwd) (optional: output filename with path)\n" 
     } 
@@ -33,6 +31,18 @@ set -o errexit
 set -o pipefail
 set -o nounset
 set -o xtrace
+
+#check PIPE_LOC environment variable is set
+#https://stackoverflow.com/questions/307503
+: "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
+
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
+
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
 
 version=$(basename "$1")
 type=$(basename $(dirname "$1"))
