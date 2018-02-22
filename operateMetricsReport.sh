@@ -27,6 +27,7 @@ display_usage() {
 source /broad/software/scripts/useuse
 use R-3.3
 use .pandoc-1.12.4.2
+use .texlive-2014
 
 set -o errexit
 set -o pipefail
