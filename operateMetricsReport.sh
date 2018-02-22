@@ -67,5 +67,5 @@ then
 #    a_file="${a_dir}/all.metrics"
 fi 
 
-Rscript -e "library(rmarkdown);  render(\"${SCRIPTDIR}/metrics.Rmd\", output_format = \"pdf_document\", output_dir=\"$a_dir\", intermediates_dir=\"$a_dir\", output_file = \"$a_out\", params = list(input=\"$a_file\"))"
+Rscript -e "library(rmarkdown);  render(\"${SCRIPTDIR}/metrics.Rmd\", output_format=\"pdf_document\", knit_root_dir=\"$a_dir\", output_dir=\"$a_dir\", intermediates_dir=\"$a_dir\", output_file=\"$a_out\", params=list(input=\"$a_file\"))"
 
