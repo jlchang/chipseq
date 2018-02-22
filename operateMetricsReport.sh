@@ -64,7 +64,7 @@ then
     a_out=$(basename $2)
     #for testing, use test input at output location
     #comment out for production to use to redirect output
-    a_file="${a_dir}/all.metrics"
+#    a_file="${a_dir}/all.metrics"
 fi 
 
 Rscript -e "library(rmarkdown);  render(\"${SCRIPTDIR}/metrics.Rmd\", output_format = \"pdf_document\", output_dir=\"$a_dir\", intermediates_dir=\"$a_dir\", output_file = \"$a_out\", params = list(input=\"$a_file\"))"

@@ -48,7 +48,7 @@ then
     m_out=$(basename $2)
     #for testing with non-production input at output location
     #comment out for production to use to redirect output
-    m_file="${m_dir}/${ssf}_${type}_${version}.metrics_p5.1"
+    #m_file="${m_dir}/${ssf}_${type}_${version}.metrics_p5.1"
 fi 
 
 Rscript -e "library(rmarkdown); render(\"${SCRIPTDIR}/hiseq_expt_report.Rmd\", output_format = \"pdf_document\", output_dir=\"$m_dir\", intermediates_dir=\"$m_dir\", output_file = \"$m_out\", params = list(input=\"$m_file\"))"
