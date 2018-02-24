@@ -138,7 +138,7 @@ sample only duplication rate: `r percent(mean(samples$pDUPLICATION))`
 &#35; samples with >3% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.03) %>% nrow()`  
 &#35; samples with >5% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.05) %>% nrow()`  
 
-samples with >0.5% duplication:
+samples with >5% duplication:
 ```{r DUP_gt_1pct, echo=FALSE}
 df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION > 0.05) %>% arrange(desc(pDUPLICATION)) %>% mutate(pDUP = percent(pDUPLICATION)) %>% select(Sample, pDUP) 
 ``` 
@@ -151,8 +151,12 @@ sample-only adapter rate: `r percent(mean(samples$R1_ADAPTER))`
 &#35; samples with > 5% adapter: `r df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER>=0.05) %>% nrow()`  
 
 samples with >2% adapter:
-```{r , echo=FALSE}
+```{r Adapter, echo=FALSE}
 df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER > 0.02) %>% arrange(desc(R1_ADAPTER)) %>% mutate(Adapter = percent(R1_ADAPTER)) %>% select(Sample, Adapter) 
 ```
 
+## H3K27ac FRiP
 
+```{r H3K27ac_FRiP, echo=FALSE}
+df %>% select(Sample, mapq1PE_FRIP) %>% arrange(mapq1PE_FRIP) %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)) %>% select(Sample, H3K27ac_FRiP) 
+```
