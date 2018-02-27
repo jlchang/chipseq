@@ -1,6 +1,6 @@
 new
 genome hg19
-snapshotDirectory /btl/analysis/ChIPseq/mapq1/SSF-XXXXX/hiseq/v1/SSF-XXXXX_IGV
+snapshotDirectory /btl/analysis/ChIPseq/mapq1/EXPTPATH/SSF-XXXXX_IGV
 load /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.bb
 maxPanelHeight 40
 goto chr19:34848645-34858645

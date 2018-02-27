@@ -1,0 +1,145 @@
+---
+title: "ChIPseq metrics"
+output:
+  pdf_document: default
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+params:
+  input: all.metrics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(ggplot2)
+library(hms)
+library(tidyverse)
+library(scales)
+library(knitr)
+
+df <- read.table(
+file = params$input,
+sep="\t",
+header=T,
+stringsAsFactors = TRUE
+)
+
+expt_date <- read.table(
+file = "/btl/analysis/ChIPseq/mapq1/analysis/ssf_date.tsv",
+sep="\t",
+header=T,
+stringsAsFactors = TRUE
+)
+
+#To add dates, need to separate Analysis into it's SSF and its analysis_label
+df2 <- df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" )
+
+library(hms)
+expt_date2 <- expt_date %>% mutate(Date = parse_date(Date, "%m/%d/%y"))
+
+df3 <- left_join(df2, expt_date2, by = "SSF")
+
+df4 <- df3 %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf), labels=c("<3%","3%<X<5%", "5%<X<10%",">10%")))
+
+samples <- df4 %>% filter(Ctrl=="no") %>% mutate(pctA = MAPQ1_Reads/Tot_Reads)
+
+hiseq <- samples %>% filter(type=="hiseq")
+
+miseq <- samples %>% filter(type=="miseq")
+
+```
+
+#### all plots are samples only, no controls
+
+##
+
+## H3K27ac FRiP over time 
+
+```{r FRiP}
+ggplot(data=samples, aes(y=mapq1PE_FRIP, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Stratified H3K27ac FRiP 
+
+```{r Strat_FRiP}
+ggplot(samples, aes(x=reorder(Expt,Date), fill=fcat)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+````
+
+## Total Reads (hiseq)
+
+```{r hiseq_tot_Reads, echo=FALSE}
+ggplot(data=hiseq, aes(y=Tot_Reads, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Total Reads (miseq)
+
+```{r miseq_tot_Reads, echo=FALSE}
+ggplot(data=miseq, aes(y=Tot_Reads, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Duplication Rate (all)
+
+```{r pDup, echo=FALSE}
+ggplot(data=samples, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+## Duplication Rate (hiseq)
+
+```{r hiseq_pDup, echo=FALSE}
+ggplot(data=hiseq, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+## Duplication Rate (miseq)
+
+```{r miseq_pDup, echo=FALSE}
+ggplot(data=miseq, aes(y=pDUPLICATION, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (all)
+
+```{r adapter, echo=FALSE}
+ggplot(data=samples, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (hiseq)
+
+```{r hiseq_adapter, echo=FALSE}
+ggplot(data=hiseq, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## R1_adapter Rate (miseq)
+
+```{r miseq_adapter, echo=FALSE}
+ggplot(data=miseq, aes(y=R1_ADAPTER, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+## Percent reads analyzed (all)
+
+```{r pct_analyzed, echo=FALSE}
+ggplot(data=samples, aes(y=pctA, x=reorder(Expt,Date))) + geom_boxplot() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+## Mean values of key metrics (samples only)
+
+```{r MetricsMeans, echo=FALSE}
+hiseq_means_df <- hiseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+
+cat("hiseq")
+
+hiseq_means_df2 <- hiseq_means_df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" )
+suppressWarnings(hiseq_means_df3 <- left_join(hiseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,RSC,Date))
+
+kable(hiseq_means_df3)
+
+cat("miseq")
+
+miseq_means_df <- miseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+
+miseq_means_df2 <- miseq_means_df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" ) 
+
+suppressWarnings(miseq_means_df3 <- left_join(miseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,RSC,Date))
+
+kable(miseq_means_df3)
+```

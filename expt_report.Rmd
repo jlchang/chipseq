@@ -1,0 +1,131 @@
+---
+title: "ChIPSeq MiSeq QC"
+output:
+  pdf_document: default
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+params:
+  input: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(hms)
+library(tidyverse)
+library(scales)
+library(knitr)
+
+df <- read.table(
+file = params$input,
+sep="\t",
+header=T,
+stringsAsFactors = TRUE
+)
+
+
+parsed_input <- strsplit(basename(params$input), "_")
+
+ssf <- parsed_input[[1]][1]
+
+samples <- df %>% filter(Ctrl=="no")
+```
+
+
+## Sample representation in ``r basename(params$input)``
+
+Batch size: `r nrow(df)`  
+&#35; samples in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="no") %>% nrow()`  
+&#35; controls in SSF: `r df %>% select(Sample, Ctrl) %>% filter(Ctrl=="yes") %>% nrow()`  
+
+## H3K27ac FRiP stratification (samples only) 
+
+```{r stratified_FRiP, echo=FALSE}
+df2 <- df %>% mutate(fcat=cut(mapq1PE_FRIP, breaks=c(-Inf, 0.03, 0.05, 0.1, Inf), labels=c("<3%","3%<X<5%", "5%<X<10%",">10%")))
+
+kable(df2 %>% filter(Ctrl=="no") %>% group_by(fcat) %>% summarize (n = n()) %>% mutate(pct_fcat = percent(n/sum(n))))
+```
+
+## Mean values of key metrics (samples only)
+
+```{r MetricsMeans, echo=FALSE}
+means_df <- df %>% filter(Ctrl=="no") %>% select(pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+
+kable(means_df, row.names = FALSE)
+```
+
+## Results from Controls
+
+```{r controls, echo=FALSE}
+
+kable(df %>% filter(Ctrl=="yes") %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)) %>% select(Sample, H3K27ac_FRiP, Tot_Reads))
+```
+
+## Evaluation of total reads 
+
+Total reads: `r format(sum(df$Tot_Reads), big.mark = ",")`  
+Avg reads (all): `r format(round(mean(df$Tot_Reads)), scientific=FALSE, big.mark = ",")`  
+Avg reads (samples only): `r format(round(df %>% filter(Ctrl=="no")  %>% select(Sample, Tot_Reads) %>%  summarize(mean(Tot_Reads))), scientific=FALSE, big.mark = ",")`  
+Avg mapq1 reads (samples only): `r format(round(df %>% filter(Ctrl=="no")  %>% select(Sample, MAPQ1_Reads) %>%  summarize(mean(MAPQ1_Reads))), scientific=FALSE, big.mark = ",")` 
+
+## Distribution of Total Reads
+
+```{r Tot_Reads_plot, echo=FALSE}
+plot(ggplot(data=df, aes(x = reorder(Sample, Tot_Reads), y=Tot_Reads)) + geom_bar(stat="identity", fill = "grey", colour = "black") + 
+    geom_bar(data = df, aes(x = reorder(Sample, MAPQ1_Reads), y = MAPQ1_Reads), stat = "identity", fill = "grey", colour = "blue") +
+    theme(axis.text.x = element_text(size=5, angle = 90, hjust = 1)) )
+```
+
+```{r check_excess_reads, echo=FALSE}
+
+outlier_samples <- df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% nrow()
+if ( outlier_samples==0) {
+  excess_reads <- FALSE
+} else {
+  excess_reads <- TRUE
+}
+
+```
+
+```{r excess_reads, echo=FALSE, eval=excess_reads}
+cat("jackpot samples")
+df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% select(Sample,Tot_Reads)
+
+lost_reads <- df %>% filter(Tot_Reads > mean(df$Tot_Reads) + 2* sd(df$Tot_Reads)) %>% mutate(lost = Tot_Reads-(mean(df$Tot_Reads))) %>% select(Sample,lost) %>% summarize(sum(lost))
+
+percent_excess <- toString(round(lost_reads/sum(df$Tot_Reads)*100, digits=1))
+cat(percent_excess, '% of reads are excess reads for jackpot sample(s)', sep = "")
+```
+
+
+
+## Duplication rate
+
+Average duplication rate (all): `r percent(mean(df$pDUPLICATION))`  
+sample only duplication rate: `r percent(mean(samples$pDUPLICATION))`  
+
+
+&#35; samples with >0.5% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.005) %>% nrow()`  
+&#35; samples with >1% duplication: `r df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION>=0.01) %>% nrow()`  
+
+samples with >0.5% duplication:
+```{r DUP_gt_1pct, echo=FALSE}
+df %>% select(Sample, pDUPLICATION) %>% filter(pDUPLICATION > 0.005) %>% arrange(desc(pDUPLICATION)) %>% mutate(pDUP = percent(pDUPLICATION)) %>% select(Sample, pDUP) 
+``` 
+
+## Adapter rate (R1)
+
+Average adapter rate (all): `r percent(mean(df$R1_ADAPTER))`  
+sample-only adapter rate: `r percent(mean(samples$R1_ADAPTER))`  
+&#35; samples with > 2% adapter: `r df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER>=0.02) %>% nrow()`  
+&#35; samples with > 5% adapter: `r df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER>=0.05) %>% nrow()`  
+
+samples with >2% adapter:
+```{r adapter, echo=FALSE}
+df %>% select(Sample, R1_ADAPTER) %>% filter(R1_ADAPTER > 0.02) %>% arrange(desc(R1_ADAPTER)) %>% mutate(Adapter = percent(R1_ADAPTER)) %>% select(Sample, Adapter) 
+```
+
+## H3K27ac FRiP
+
+```{r H3K27ac_FRiP, echo=FALSE}
+df %>% select(Sample, mapq1PE_FRIP) %>% arrange(mapq1PE_FRIP) %>% mutate(H3K27ac_FRiP = percent(mapq1PE_FRIP)) %>% select(Sample, H3K27ac_FRiP) 
+```

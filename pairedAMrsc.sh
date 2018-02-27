@@ -1,6 +1,6 @@
 ######################
 #
-#  pairedAlignMarkD.sh
+#  pairedAMrsc.sh
 #
 #  generate basic metrics on ChIPseq paired reads
 #
@@ -17,13 +17,23 @@ reuse -q .java-jdk-1.8.0_121-x86-64
 reuse -q .bedtools-2.26.0
 reuse -q .r-3.3.0
 
-SCRIPTDIR="/cil/shed/apps/internal/chipseq/prod"
-
 # set to print each command and exit script if any command fails
 set -euxo pipefail
 
 # set exit script if any command fails (-e and -o pipefail) or unset variable found (-u)
 #set -euo pipefail
+
+#check PIPE_LOC environment variable is set
+#https://stackoverflow.com/questions/307503
+: "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
+
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
+
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
 
 echo "execution host: $HOSTNAME" > exec_host.txt
 
@@ -215,7 +225,7 @@ TAG_ALIGN_PREFIX="${RAW_MAPQ_PREFIX}.PE2SE.nodup"
 BEDPE_FILE="${TAG_ALIGN_PREFIX}.bedpe.gz"
 FULL_TAG_ALIGN_FILE="${TAG_ALIGN_PREFIX}.tagAlign.gz"
 SUBSAMPLE_TAG_ALIGN_FILE="${TAG_ALIGN_PREFIX}.15M.tagAlign.gz"
-SUBSAMPLE_QC="${TAG_ALIGN_PREFIX}.15M.tagAlign.qc"
+
 
 samtools sort -n ${PAIRED_MAPQ_FILE} -o ${PAIRED_MAPQ_NMSRT_FILE}
 
@@ -232,17 +242,24 @@ rm ${PAIRED_MAPQ_NMSRT_FILE}
 # Phantom Peak Quality Tools
 # =============
 
+SUBSAMPLE_QC="${TAG_ALIGN_PREFIX}.15M.tagAlign.qc"
+
+#PPQT fails if insufficient reads- want metrics, so ignore failures
+set +e
 Rscript $SCRIPTDIR/run_spp.R -c=${SUBSAMPLE_TAG_ALIGN_FILE} -savp -out=${SUBSAMPLE_QC}
 
 sed -r 's/,[^\t]+//g' ${SUBSAMPLE_QC} > subsample.tmp
 mv subsample.tmp ${SUBSAMPLE_QC}
+
 
 # =============
 # gather metrics
 # =============
 
 Rscript $SCRIPTDIR/processMapqCounts.R
+set -e
 
+#metrics script rewritten to supply "N/A" if no PPTQ output
 $SCRIPTDIR/gatherPairedAlignMarkDmetrics.sh $1 > $1.Metrics
 
 
