@@ -47,9 +47,10 @@ fi
 version=$(basename "$1")
 type=$(basename $(dirname "$1"))
 ssf=$(basename $(dirname $(dirname "$1")))
+m_root=$(dirname $(dirname $(dirname "$1")))
 
-m_dir="/btl/analysis/ChIPseq/mapq1/${ssf}/${type}/${version}"
 m_file="${m_dir}/${ssf}_${type}_${version}.metrics_p5.1"
+m_dir="${m_root}/${ssf}/${type}/${version}"
 m_out="${m_dir}/${ssf}_${type}_${version}_expt_report.pdf"
 
 if [  $# -gt 1 ] 
