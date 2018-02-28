@@ -2,7 +2,7 @@
 #
 #  collectExptMetrics.sh
 #
-#  collect metrics from all samples in input_data.tsv into .metrics_p5 file 
+#  collect metrics from all samples in input_data.tsv into _metrics.tsv file 
 #
 ######################
 
@@ -14,7 +14,7 @@ type=$(basename $(dirname $orig))
 ssf=$(basename $(dirname $(dirname $orig)))
 expt=${ssf}_${type}_${suffix}
 
-result=${expt}.metrics_p5.1
+result=${expt}_metrics.tsv
 
 
 if [ -e ${result} ]

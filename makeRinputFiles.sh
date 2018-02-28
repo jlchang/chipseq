@@ -20,10 +20,10 @@ if [ -e all.metrics ]
     exit
 fi
 
-head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1.metrics_p5.1 > all.metrics
+head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1_metrics.tsv > all.metrics
 
 
-for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/[hm]iseq/*/*.metrics_p5.1)
+for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/[hm]iseq/*/*_metrics.tsv)
 do
     tail -n +2 $i >> all.metrics
 done
@@ -31,16 +31,16 @@ done
 echo "experiments in all.metrics:"
 cut -f 1 all.metrics | uniq
 
-head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1.metrics_p5.1 > hiseq.metrics
+head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1_metrics.tsv > hiseq.metrics
 
-for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/hiseq/*/*.metrics_p5.1)
+for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/hiseq/*/*_metrics.tsv)
 do
     tail -n +2 $i >> hiseq.metrics
 done
 
-head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1.metrics_p5.1 > miseq.metrics
+head -n 1 /btl/analysis/ChIPseq/mapq1//SSF-12242/hiseq/v1/SSF-12242_hiseq_v1_metrics.tsv > miseq.metrics
 
-for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/miseq/*/*.metrics_p5.1)
+for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/miseq/*/*_metrics.tsv)
 do
     tail -n +2 $i >> miseq.metrics
 done

@@ -49,8 +49,8 @@ type=$(basename $(dirname "$1"))
 ssf=$(basename $(dirname $(dirname "$1")))
 m_root=$(dirname $(dirname $(dirname "$1")))
 
-m_file="${m_dir}/${ssf}_${type}_${version}.metrics_p5.1"
 m_dir="${m_root}/${ssf}/${type}/${version}"
+m_file="${m_dir}/${ssf}_${type}_${version}_metrics.tsv"
 m_out="${m_dir}/${ssf}_${type}_${version}_expt_report.pdf"
 
 if [  $# -gt 1 ] 
@@ -59,7 +59,7 @@ then
     m_out=$(basename $2)
     #for testing with non-production input at output location
     #comment out for production to use to redirect output
-    #m_file="${m_dir}/${ssf}_${type}_${version}.metrics_p5.1"
+    #m_file="${m_dir}/${ssf}_${type}_${version}_metrics.tsv"
 fi 
 
 Rscript -e "library(rmarkdown); render(\"${SCRIPTDIR}/expt_report.Rmd\", output_format = \"pdf_document\",  knit_root_dir=\"$m_dir\", output_dir=\"$m_dir\", intermediates_dir=\"$m_dir\", output_file = \"$m_out\", params = list(input=\"$m_file\"))"
