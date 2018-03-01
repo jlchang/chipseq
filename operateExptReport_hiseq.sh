@@ -2,7 +2,7 @@
 #
 #  operateExptReport_hiseq.sh
 #
-#  Simplify running hiseq_expt_report.Rmd for hiseq runs
+#  Simplify running expt_report_hiseq.Rmd for hiseq runs
 #
 ######################
 
@@ -62,4 +62,4 @@ then
     #m_file="${m_dir}/${ssf}_${type}_${version}_metrics.tsv"
 fi 
 
-Rscript -e "library(rmarkdown); render(\"${SCRIPTDIR}/hiseq_expt_report.Rmd\", output_format = \"pdf_document\",  knit_root_dir=\"$m_dir\", output_dir=\"$m_dir\", intermediates_dir=\"$m_dir\", output_file = \"$m_out\", params = list(input=\"$m_file\"))"
+Rscript -e "library(rmarkdown); render(\"${SCRIPTDIR}/expt_report_hiseq.Rmd\", output_format = \"pdf_document\",  knit_root_dir=\"$m_dir\", output_dir=\"$m_dir\", intermediates_dir=\"$m_dir\", output_file = \"$m_out\", params = list(input=\"$m_file\"))"
