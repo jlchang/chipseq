@@ -35,7 +35,8 @@ if [  ! -d "$SCRIPTDIR" ]
     exit
 fi
 
-echo "execution host: $HOSTNAME" > exec_host.txt
+echo "execution host: $HOSTNAME" >> run_info.txt
+echo "PIPE_LOC: $PIPE_LOC" >> run_info.txt
 
 # =============================
 # Inputs:
