@@ -21,7 +21,20 @@ if [  $# -lt 1 ]
 then 
     display_usage
     exit 1
-fi 
+fi
+
+ssf=$"{1}"
+version=$"{2}"
+
+#check if supplied path exists
+if [  ! -d "$3" ]
+then
+    echo "Unable to find $3, please check the provided path"
+    exit
+else
+    datapath=$"{3}"
+fi
+
 
 #check if optional output path supplied
 if [  $# -lt 4 ]
@@ -34,36 +47,29 @@ else
         exit
     else
         chipdir="${4}"
-        echo "creating analysis directory in optional output location: $4"
+        echo "creating analysis directory in optional output location: $chipdir"
     fi
 fi
 
-echo "checking ${chipdir}/${1}/miseq/${2}"
+echo "checking ${chipdir}/${ssf}/miseq/${version}"
 
-if [ -e ${chipdir}/${1}/miseq/${2} ]
+if [ -e ${chipdir}/${ssf}/miseq/${version} ]
   then
-    echo "An analysis directory already exists for ${1}/miseq/${2}, exiting"
+    echo "An analysis directory already exists for ${ssf}/miseq/${version}, exiting"
     exit
 fi
 
-#check if supplied path exists
-if [  ! -d "$3" ]
-then
-    echo "Unable to find $3, please check the provided path"
-    exit
-else
-    dataPath=$1
-fi
+
 
 
 #check if fastq files exist at supplied path
 
-if stat -t ${3}/*_R1_001.fastq.gz >/dev/null 2>&1
+if stat -t ${datapath}/*_R1_001.fastq.gz >/dev/null 2>&1
 then
-    count=$(ls -1 ${3}/*_R1_001.fastq.gz | grep -v Undetermined | wc -l)
-    echo "found $count samples"
+    count=$(ls -1 ${datapath}/*_R1_001.fastq.gz | grep -v Undetermined | wc -l)
+    echo "found $count samples at "
 else
-    echo "no fastq found at $1"
+    echo "no fastq found at $datapath"
     exit
 fi
 
