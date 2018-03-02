@@ -11,7 +11,7 @@
 
 orig=`pwd`
 source /broad/software/scripts/useuse
-use UGES
+reuse UGES
 
 
 set -e
