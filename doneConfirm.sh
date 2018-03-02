@@ -22,6 +22,12 @@ if [  ! -d "$SCRIPTDIR" ]
     exit
 fi
 
+if [ ! -f input_data.tsv ]
+  then
+    echo "Expecting to find input_data.tsv file. Not found, exiting..."
+    exit
+fi
+
 fail=0
 PPQT=0
 all=$(wc -l input_data.tsv)
@@ -42,14 +48,32 @@ do
     echo "PPQT failed on ${sample}"
     PPQT=$((PPQT+1))
   fi
+  
 done < input_data.tsv
 
 echo "fails = $fail"
 echo "PPQT N/A= $PPQT"
-if [[ $fails -gt 0 ]]
+if [[ $fail -gt 0 ]]
 then
-  echo "Failed samples should be rerun or removed from input_data.tsv before metrics file is created"
-  exit
+    echo "Check if failed samples should be rerun"
+    echo "Samples with zero mapq1 reads need to be removed from input_data.tsv before collecting metrics"
+    echo "PPQT N/A values may cause reporting issues, use with caution or remove from input_data.tsv"
+    exit
+else
+    ${SCRIPTDIR}/collectExptMetrics.sh
+    version=$(basename "$orig")
+    type=$(basename $(dirname "$orig"))
+    ssf=$(basename $(dirname $(dirname "$orig")))
+    if  [ "$type" = "miseq" ]
+    then
+        $SCRIPTDIR/operateExptReport_miseq.sh $(pwd)
+        $SCRIPTDIR/qc_miseq_template.sh ${ssf}_${type}_${version}
+    fi
+    if  [ "$type" = "hiseq" ]
+    then
+        $SCRIPTDIR/operateExptReport_hiseq.sh $(pwd)
+        $SCRIPTDIR/qc_hiseq_template.sh ${ssf}_${type}_${version}
+    fi
 fi
 
-${SCRIPTDIR}/collectExptMetrics.sh
+
