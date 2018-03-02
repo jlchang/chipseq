@@ -43,5 +43,5 @@ housekeeping IGV plots show convincing peaks for samples with >4% H3K27ac FRiP
 some samples with >3% H3K27ac FRiP may also have peaks 
 see attachment ${1}_housekeeping_IGV.pdf
 
-All sequencing cycles had mean quality >Q30
-raw metrics attachment: ${1}.metrics.tsv"
+____ sequencing cycles had mean quality >Q30
+raw metrics attachment: ${1}_metrics.tsv"
