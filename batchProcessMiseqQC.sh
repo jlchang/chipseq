@@ -23,8 +23,8 @@ then
     exit 1
 fi
 
-ssf=$"{1}"
-version=$"{2}"
+ssf="{$1}"
+version="{$2}"
 
 #check if supplied path exists
 if [  ! -d "$3" ]
@@ -32,7 +32,7 @@ then
     echo "Unable to find $3, please check the provided path"
     exit
 else
-    datapath=$"{3}"
+    datapath="{$3}"
 fi
 
 
