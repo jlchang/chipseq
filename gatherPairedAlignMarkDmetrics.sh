@@ -8,6 +8,8 @@
 
 #!/bin/bash
 
+set -e
+
 #sample="F05-CD-H3K27ac"
 sample=$1
 
@@ -70,6 +72,8 @@ fi
 
 #ESTIMATED_LIBRARY_SIZE
 els=$(sed -n "8p" ${sample}.raw.cleaned.elc  | awk '{ print $10 }')
+
+# -z check that $els has zero length
 if [ -z "$els" ]; then
   els="N/A"
 fi
@@ -77,8 +81,12 @@ fi
 #mapqPE_READS_in_H3K27ac_peaks
 mperip=$(cat ${sample}.mapq1.PE.nodup.H3K27ac.rip)
 
+if [ "$MR" == "0" ]; then
+    mpefrip="N/A"
+else 
+    mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
+fi
 
-mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
 
 #Phantom peak quality metrics, if it ran
 
@@ -100,8 +108,12 @@ else
   QT="N/A"
 fi
 
+if [ "$TR" == "0" ]; then
+    pctAn="N/A"
+else 
+    pctAn=$(echo "scale=4; $MR/$TR" | bc)
+fi
 
-pctAn=$(echo "scale=4; $MR/$TR" | bc)
 
 echo -e "Tot_Reads\tMAPQ1_Reads\tpctAnalyzed\tmapq1PE_rip\tmapq1PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tRSC\tNSC\tQT\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads"
 echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup"
