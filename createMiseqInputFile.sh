@@ -30,3 +30,6 @@ for i in $(cat R1); do basename $i | cut -d "_" -f 1-2 >> sample;  done
 paste sample R1 R2 | sort -t "_" -k 2 > input_data.tsv
 rm sample R1 R2
 echo "input_data.tsv created"
+
+mv input_data.tsv input_data.tsv_tmp
+sort -t '_' -k 2 -V input_data.tsv_tmp > input_data.tsv
