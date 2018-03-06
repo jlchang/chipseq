@@ -32,7 +32,7 @@ echo "
 XXX samples did not reach 10 million analyzed reads due to high duplication 
 all non-dropout samples had >10 million total reads
 
-H3K27ac FRiP scores 
+H3K27ac FRiP scores <compare to Miseq>
 see attachment metrics_2018____.pdf
 
 ____ of the ____ samples had >5% duplication
@@ -40,7 +40,7 @@ ____ samples had >10% duplication
 see attachment ${1}_expt_report.pdf
 
 housekeeping IGV plots show convincing peaks for samples with >4% H3K27ac FRiP 
-some samples with >3% H3K27ac FRiP may also have peaks 
+some samples with <3% H3K27ac FRiP may also have peaks 
 see attachment ${1}_housekeeping_IGV.pdf
 
 ____ sequencing cycles had mean quality >Q30
