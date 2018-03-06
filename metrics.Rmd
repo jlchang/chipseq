@@ -124,22 +124,22 @@ ggplot(data=samples, aes(y=pctA, x=reorder(Expt,Date))) + geom_boxplot() + theme
 ## Mean values of key metrics (samples only)
 
 ```{r MetricsMeans, echo=FALSE}
-hiseq_means_df <- hiseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+hiseq_means_df <- hiseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed))
 
 cat("hiseq")
 
 hiseq_means_df2 <- hiseq_means_df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" )
-suppressWarnings(hiseq_means_df3 <- left_join(hiseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,RSC,Date))
+suppressWarnings(hiseq_means_df3 <- left_join(hiseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,Date))
 
 kable(hiseq_means_df3)
 
 cat("miseq")
 
-miseq_means_df <- miseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION,RSC) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed) ,RSC = RSC )
+miseq_means_df <- miseq %>% group_by(Expt) %>% select(Expt,pctAnalyzed,mapq1PE_FRIP,R1_ADAPTER,pDUPLICATION) %>% summarize_if(is.numeric,funs(mean)) %>% transmute(Expt = Expt, H3K27ac_FRIP = percent(mapq1PE_FRIP) ,R1_ADAPTER = percent(R1_ADAPTER) ,pDUPLICATION = percent(pDUPLICATION), pctAnalyzed = percent(pctAnalyzed))
 
 miseq_means_df2 <- miseq_means_df %>% mutate(Expt2 = Expt) %>% separate(Expt2, into = c( "SSF" , "type", "version" ), sep = "_" ) 
 
-suppressWarnings(miseq_means_df3 <- left_join(miseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,RSC,Date))
+suppressWarnings(miseq_means_df3 <- left_join(miseq_means_df2, expt_date2, by = "SSF") %>% arrange(desc(Date)) %>% select(Expt,pctAnalyzed,H3K27ac_FRIP,R1_ADAPTER,pDUPLICATION,Date))
 
 kable(miseq_means_df3)
 ```
