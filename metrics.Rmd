@@ -24,7 +24,7 @@ stringsAsFactors = TRUE
 )
 
 expt_date <- read.table(
-file = "/btl/analysis/ChIPseq/analysis/ssf_date.tsv",
+file = "/btl/analysis/ChIPseq/timeseries/ssf_date.tsv",
 sep="\t",
 header=T,
 stringsAsFactors = TRUE
