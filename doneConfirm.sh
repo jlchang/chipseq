@@ -10,6 +10,10 @@
 
 orig=`pwd`
 
+source /broad/software/scripts/useuse
+use R-3.3
+use UGER
+
 #check PIPE_LOC environment variable is set
 #https://stackoverflow.com/questions/307503
 : "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
@@ -21,6 +25,8 @@ if [  ! -d "$SCRIPTDIR" ]
     echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
     exit
 fi
+
+export PIPE_LOC=$PIPE_LOC
 
 if [ ! -f input_data.tsv ]
   then
@@ -64,6 +70,7 @@ else
     version=$(basename "$orig")
     type=$(basename $(dirname "$orig"))
     ssf=$(basename $(dirname $(dirname "$orig")))
+    origpath=$(dirname $(dirname $(dirname "$orig")))
     if  [ "$type" = "miseq" ]
     then
         $SCRIPTDIR/operateExptReport_miseq.sh $(pwd)
@@ -72,6 +79,9 @@ else
     if  [ "$type" = "hiseq" ]
     then
         $SCRIPTDIR/operateExptReport_hiseq.sh $(pwd)
+        Rscript $SCRIPTDIR/sampleByFRiP.R ${ssf}_${type}_${version}
+        $SCRIPTDIR/setupFripSortedIGV.sh
+        qsub /cil/shed/apps/internal/chipseq/dev/inProgress/UGER_IGV_jobscript_template.sh ${origpath}/${ssf}/${type}/${version}/${ssf}_${type}_${version}_IGV/housekeeping_${ssf}_${type}_${version}.txt
         $SCRIPTDIR/qc_hiseq_template.sh ${ssf}_${type}_${version}
     fi
 fi
