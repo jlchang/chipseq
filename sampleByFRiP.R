@@ -1,7 +1,14 @@
 #!/usr/bin/env Rscript
 
+args = commandArgs(trailingOnly=TRUE)
+#test if there is at least one argument: if not, return an error
+if (length(args)<1) {
+  stop("Must supply metrics filename prefix).n", call.=FALSE)
+}
 
-report = list.files( path = "." , pattern = filename)
+metricsFile <- paste(args[1], "_metrics.tsv", sep="")
+
+report = list.files( path = "." , pattern = metricsFile)
 
 if (length(report)==0) { stop("no report found")}
 
