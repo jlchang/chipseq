@@ -252,13 +252,14 @@ Rscript $SCRIPTDIR/run_spp.R -c=${SUBSAMPLE_TAG_ALIGN_FILE} -savp -out=${SUBSAMP
 sed -r 's/,[^\t]+//g' ${SUBSAMPLE_QC} > subsample.tmp
 mv subsample.tmp ${SUBSAMPLE_QC}
 
+set -e
 
 # =============
 # gather metrics
 # =============
 
 Rscript $SCRIPTDIR/processMapqCounts.R
-set -e
+
 
 #metrics script rewritten to supply "N/A" if no PPTQ output
 $SCRIPTDIR/gatherPairedAlignMarkDmetrics.sh $1 > $1.Metrics
