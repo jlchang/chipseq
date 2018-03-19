@@ -110,6 +110,6 @@ for i in $(cut -f 1 input_data.tsv); do echo -e "$i\tno"; done > control_info.tx
 
 $SCRIPTDIR/runUGESPairedAMrsc.sh > submit.out
 
-echo "manually tag control samples in input_data.tsv file"
+echo "manually tag control samples in control_info.txt file"
 echo "add expt date to /btl/analysis/ChIPseq/mapq1/analysis/ssf_date.tsv"
 
