@@ -33,3 +33,4 @@ echo "input_data.tsv created"
 
 mv input_data.tsv input_data.tsv_tmp
 sort -t '_' -k 2 -V input_data.tsv_tmp > input_data.tsv
+rm input_data.tsv_tmp
