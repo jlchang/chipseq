@@ -75,13 +75,13 @@ fi
 java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar FastqToSam \
 	F1=${dataPath}/${flowcell}.${lane}.1.fastq.gz \
 	F2=${dataPath}/${flowcell}.${lane}.2.fastq.gz \
-	O=${output_prefix}.unaligned.bam \
+	O=${output_prefix}unaligned.bam \
 	SM=MQBC
 
 java -Xmx4G -jar /seq/software/picard-public/2.14.0/picard.jar  MeanQualityByCycle \
-	I=unaligned.bam \
+	I=${output_prefix}unaligned.bam \
 	O=${output_prefix}unalignedBam_mean_qual_by_cycle.txt \
 	CHART=${output_prefix}unalignedBam_mean_qual_by_cycle.pdf
 
-rm ${output_prefix}.unaligned.bam
+rm ${output_prefix}unaligned.bam
 Rscript $SCRIPTDIR/identifyMeanQualityByCycles.R "${output_prefix}" > ${output_prefix}below_30_qual_by_cycle_report.txt
