@@ -33,7 +33,7 @@ if [ -e all.metrics ]
     exit
 fi
 
-cp ${SCRIPTDIR}/metrics_header.txt all.metrics
+cut -f 1-22 ${SCRIPTDIR}/metrics_header.txt > all.metrics
 
 
 for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/[hm]iseq/*/*_metrics.tsv)
@@ -44,16 +44,16 @@ done
 echo "experiments in all.metrics:"
 cut -f 1 all.metrics | uniq
 
-cp ${SCRIPTDIR}/metrics_header.txt hiseq.metrics
-
-for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/hiseq/*/*_metrics.tsv)
-do
-    tail -n +2 $i | cut -f 1-22 >> hiseq.metrics
-done
-
-cp ${SCRIPTDIR}/metrics_header.txt miseq.metrics
-
-for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/miseq/*/*_metrics.tsv)
-do
-    tail -n +2 $i | cut -f 1-22 >> miseq.metrics
-done
+# cut -f 1-22 ${SCRIPTDIR}/metrics_header.txt > hiseq.metrics
+# 
+# for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/hiseq/*/*_metrics.tsv)
+# do
+#     tail -n +2 $i | cut -f 1-22 >> hiseq.metrics
+# done
+# 
+# cut -f 1-22 ${SCRIPTDIR}/metrics_header.txt > miseq.metrics
+# 
+# for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/miseq/*/*_metrics.tsv)
+# do
+#     tail -n +2 $i | cut -f 1-22 >> miseq.metrics
+# done
