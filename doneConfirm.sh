@@ -66,7 +66,7 @@ then
     echo "PPQT N/A values may cause reporting issues, use with caution or remove from input_data.tsv"
     exit
 else
-    ${SCRIPTDIR}/collectExptMetrics.sh
+    ${SCRIPTDIR}/collectExptMetrics.sh || exit 1
     version=$(basename "$orig")
     type=$(basename $(dirname "$orig"))
     ssf=$(basename $(dirname $(dirname "$orig")))

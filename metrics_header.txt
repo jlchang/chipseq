@@ -1,0 +1,1 @@
+Expt	Sample	Ctrl	Tot_Reads	MAPQ1_Reads	pctAnalyzed	mapq1PE_rip	mapq1PE_FRIP	R1_CHIMERAS	R1_ADAPTER	R2_CHIMERAS	R2_ADAPTER	pDUPLICATION	EstLibSize	RSC	NSC	QT	MapRaw_Reads	PropPr_Reads	PrSing_Reads	mmdc_Reads	pDup_Reads	Gm12878_H3k27ac	Gm12878_H3k4me2	K562_H3k4me2	foldGm12878_H3k27ac	foldGm12878_H3k4me2	foldK562_H3k27ac	foldK562_H3k4me2

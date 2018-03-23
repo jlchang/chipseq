@@ -8,6 +8,18 @@
 
 #!/bin/bash
 
+#check PIPE_LOC environment variable is set
+#https://stackoverflow.com/questions/307503
+: "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
+
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
+
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
+
 orig=`pwd`
 suffix=$(basename $orig)
 type=$(basename $(dirname $orig))
@@ -21,7 +33,7 @@ if [ -e ${result} ]
   then
     echo "metrics file already exists, try again after you:"
     echo "rm ${result}"
-    exit
+    exit 1
 fi
 
 
@@ -29,7 +41,7 @@ set -e
 echo "collecting metrics from samples in $orig"
 
 
-echo "Expt	Sample	Ctrl	Tot_Reads	MAPQ1_Reads	pctAnalyzed	mapq1PE_rip	mapq1PE_FRIP	R1_CHIMERAS	R1_ADAPTER	R2_CHIMERAS	R2_ADAPTER	pDUPLICATION	EstLibSize	RSC	NSC	QT	MapRaw_Reads	PropPr_Reads	PrSing_Reads	mmdc_Reads	pDup_Reads" >> ${result}
+cp ${SCRIPTDIR}/metrics_header.txt ${result}
 
 while IFS=$'\t': read sample fastq1 fastq2
 do

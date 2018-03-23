@@ -10,6 +10,18 @@
 
 set -e
 
+#check PIPE_LOC environment variable is set
+#https://stackoverflow.com/questions/307503
+: "${PIPE_LOC:?Need to set PIPE_LOC non-empty}"
+
+SCRIPTDIR="/cil/shed/apps/internal/chipseq/$PIPE_LOC"
+
+if [  ! -d "$SCRIPTDIR" ]
+  then
+    echo "Unable to find $SCRIPTDIR, please check the provided PIPE_LOC value"
+    exit
+fi
+
 #sample="F05-CD-H3K27ac"
 sample=$1
 
@@ -145,6 +157,6 @@ else
 fi
 
 
-echo -e "Tot_Reads\tMAPQ1_Reads\tpctAnalyzed\tmapq1PE_rip\tmapq1PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tRSC\tNSC\tQT\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads\tGm12878_H3k27ac\tGm12878_H3k4me2\tK562_H3k4me2\tfoldGm12878_H3k27ac\tfoldGm12878_H3k4me2\tfoldK562_H3k27ac\tfoldK562_H3k4me2"
+cat ${SCRIPTDIR}/metrics_header.txt | sed 's/Expt	Sample	Ctrl	//g'
 echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup\t$g27frip\t$gme2frip\t$kme2frip\t$foldg27\t$foldgme2\t$foldk27\t$foldkme2"
 
