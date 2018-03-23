@@ -78,15 +78,45 @@ if [ -z "$els" ]; then
   els="N/A"
 fi
 
-#mapqPE_READS_in_H3K27ac_peaks
+#mapqPE_READS_in_K562H3K27ac_peaks
 mperip=$(cat ${sample}.mapq1.PE.nodup.H3K27ac.rip)
 
 if [ "$MR" == "0" ]; then
     mpefrip="N/A"
 else 
     mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
+    foldk27=$(echo "scale=2; ($mpefrip * 100)/(0.0251 * 100)" | bc)
 fi
 
+#mapqPE_READS_in_Gm12878H3k27ac_peaks
+g27rip=$(cat ${sample}.mapq1.PE.nodup.Gm12878H3k27ac.rip)
+
+if [ "$MR" == "0" ]; then
+    g27frip="N/A"
+else 
+    g27frip=$(echo "scale=4; $g27rip/$MR" | bc)
+    foldg27=$(echo "scale=2; ($mpefrip * 100)/(0.0324 * 100)" | bc)
+fi
+
+#mapqPE_READS_in_Gm12878H3k4me2_peaks
+gme2rip=$(cat ${sample}.mapq1.PE.nodup.Gm12878H3k4me2.rip)
+
+if [ "$MR" == "0" ]; then
+    gme2frip="N/A"
+else 
+    gme2frip=$(echo "scale=4; $gme2rip/$MR" | bc)
+    foldgme2=$(echo "scale=2; ($mpefrip * 100)/(0.0436 * 100)" | bc)
+fi
+
+#mapqPE_READS_in_K562H3k4me2_peaks
+kme2rip=$(cat ${sample}.mapq1.PE.nodup.K562H3k4me2.rip)
+
+if [ "$MR" == "0" ]; then
+    kme2frip="N/A"
+else 
+    kme2frip=$(echo "scale=4; $kme2rip/$MR" | bc)
+    foldkme2=$(echo "scale=2; ($mpefrip * 100)/(0.0298 * 100)" | bc)
+fi
 
 #Phantom peak quality metrics, if it ran
 
@@ -115,6 +145,6 @@ else
 fi
 
 
-echo -e "Tot_Reads\tMAPQ1_Reads\tpctAnalyzed\tmapq1PE_rip\tmapq1PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tRSC\tNSC\tQT\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads"
-echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup"
+echo -e "Tot_Reads\tMAPQ1_Reads\tpctAnalyzed\tmapq1PE_rip\tmapq1PE_FRIP\tR1_CHIMERAS\tR1_ADAPTER\tR2_CHIMERAS\tR2_ADAPTER\tpDUPLICATION\tEstLibSize\tRSC\tNSC\tQT\tMapRaw_Reads\tPropPr_Reads\tPrSing_Reads\tmmdc_Reads\tpDup_Reads\tGm12878_H3k27ac\tGm12878_H3k4me2\tK562_H3k4me2\tfoldGm12878_H3k27ac\tfoldGm12878_H3k4me2\tfoldK562_H3k27ac\tfoldK562_H3k4me2"
+echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup\t$g27frip\t$gme2frip\t$kme2frip\t$foldg27\t$foldgme2\t$foldk27\t$foldkme2"
 

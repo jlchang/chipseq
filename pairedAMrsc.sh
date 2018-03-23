@@ -205,17 +205,24 @@ rm ${DUPMARK_MAPQ_BAM_FILE}
 
 
 # =============
-# run H3K27ac FRIP
+# count FRIP reads (reference set: ensembl_jan2011)
 # =============
 
+# H3k27ac = K562H3k27ac (need to refactor to match handling of other peaks)
+
+peak_dir="/btl/projects/ChIPseq/ENCODE/data/IGV_tracks/takeda_hg19_refs/ensembl_jan2011"
+chr_file="/btl/projects/ChIPseq/ENCODE/data/IGV_tracks/chromosomes.txt"
 
 
-#cat /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.bed | bedtools coverage -a - -b ${PAIRED_BAM_FILE} > ${PAIRED_BAM_PREFIX}.H3K27ac.bedcov
-#awk '{ sum += $11 } END { print sum ; }' ${PAIRED_BAM_PREFIX}.H3K27ac.bedcov > ${PAIRED_BAM_PREFIX}.H3K27ac.rip
-
-cat /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.sorted.bed | bedtools coverage -sorted -g /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/chromosomes.txt -a - -b ${PAIRED_MAPQ_FILE} > ${PAIRED_MAPQ_PREFIX}.H3K27ac.bedcov
+cat /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.sorted.bed | bedtools coverage -sorted -g $chr_file -a - -b ${PAIRED_MAPQ_FILE} > ${PAIRED_MAPQ_PREFIX}.H3K27ac.bedcov
 awk '{ sum += $11 } END { print sum ; }' ${PAIRED_MAPQ_PREFIX}.H3K27ac.bedcov > ${PAIRED_MAPQ_PREFIX}.H3K27ac.rip
 
+for i in Gm12878H3k27ac Gm12878H3k4me2 K562H3k4me2
+do
+    peak_path="${peak_dir}/wgEncodeBroadHistone${i}StdAln.sorted.bed"
+    cat $peak_path | bedtools coverage -sorted -g $chr_file -a - -b ${PAIRED_MAPQ_FILE} > ${PAIRED_MAPQ_PREFIX}.${i}.bedcov
+    awk '{ sum += $11 } END { print sum ; }' ${PAIRED_MAPQ_PREFIX}.${i}.bedcov > ${PAIRED_MAPQ_PREFIX}.${i}.rip
+done
 
 # =============
 # create TagAlign files
