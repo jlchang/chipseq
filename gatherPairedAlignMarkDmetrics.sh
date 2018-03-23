@@ -87,14 +87,14 @@ els=$(sed -n "8p" ${sample}.raw.cleaned.elc  | awk '{ print $10 }')
 
 # -z check that $els has zero length
 if [ -z "$els" ]; then
-  els="N/A"
+  els="NA"
 fi
 
 #mapqPE_READS_in_K562H3K27ac_peaks
 mperip=$(cat ${sample}.mapq1.PE.nodup.H3K27ac.rip)
 
 if [ "$MR" == "0" ]; then
-    mpefrip="N/A"
+    mpefrip="NA"
 else 
     mpefrip=$(echo "scale=4; $mperip/$MR" | bc)
     foldk27=$(echo "scale=2; ($mpefrip * 100)/(0.0251 * 100)" | bc)
@@ -104,7 +104,7 @@ fi
 g27rip=$(cat ${sample}.mapq1.PE.nodup.Gm12878H3k27ac.rip)
 
 if [ "$MR" == "0" ]; then
-    g27frip="N/A"
+    g27frip="NA"
 else 
     g27frip=$(echo "scale=4; $g27rip/$MR" | bc)
     foldg27=$(echo "scale=2; ($mpefrip * 100)/(0.0324 * 100)" | bc)
@@ -114,7 +114,7 @@ fi
 gme2rip=$(cat ${sample}.mapq1.PE.nodup.Gm12878H3k4me2.rip)
 
 if [ "$MR" == "0" ]; then
-    gme2frip="N/A"
+    gme2frip="NA"
 else 
     gme2frip=$(echo "scale=4; $gme2rip/$MR" | bc)
     foldgme2=$(echo "scale=2; ($mpefrip * 100)/(0.0436 * 100)" | bc)
@@ -124,7 +124,7 @@ fi
 kme2rip=$(cat ${sample}.mapq1.PE.nodup.K562H3k4me2.rip)
 
 if [ "$MR" == "0" ]; then
-    kme2frip="N/A"
+    kme2frip="NA"
 else 
     kme2frip=$(echo "scale=4; $kme2rip/$MR" | bc)
     foldkme2=$(echo "scale=2; ($mpefrip * 100)/(0.0298 * 100)" | bc)
@@ -135,23 +135,23 @@ fi
 if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
   normSC=$(cut -f 9 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
-  normSC="N/A"
+  normSC="NA"
 fi
 
 if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
   relSC=$(cut -f 10 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
-  relSC="N/A"
+  relSC="NA"
 fi
 
 if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
   QT=$(cut -f 11 ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc)
 else
-  QT="N/A"
+  QT="NA"
 fi
 
 if [ "$TR" == "0" ]; then
-    pctAn="N/A"
+    pctAn="NA"
 else 
     pctAn=$(echo "scale=4; $MR/$TR" | bc)
 fi
