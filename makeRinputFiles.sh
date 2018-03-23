@@ -38,7 +38,7 @@ cp ${SCRIPTDIR}/metrics_header.txt all.metrics
 
 for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/[hm]iseq/*/*_metrics.tsv)
 do
-    tail -n +2 $i >> all.metrics
+    tail -n +2 $i | cut -f 1-22 >> all.metrics
 done
 
 echo "experiments in all.metrics:"
@@ -48,12 +48,12 @@ cp ${SCRIPTDIR}/metrics_header.txt hiseq.metrics
 
 for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/hiseq/*/*_metrics.tsv)
 do
-    tail -n +2 $i >> hiseq.metrics
+    tail -n +2 $i | cut -f 1-22 >> hiseq.metrics
 done
 
 cp ${SCRIPTDIR}/metrics_header.txt miseq.metrics
 
 for i in $(ls -1 /btl/analysis/ChIPseq/mapq1/*-*/miseq/*/*_metrics.tsv)
 do
-    tail -n +2 $i >> miseq.metrics
+    tail -n +2 $i | cut -f 1-22 >> miseq.metrics
 done
