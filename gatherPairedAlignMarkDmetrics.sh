@@ -130,6 +130,16 @@ else
     foldkme2=$(echo "scale=2; ($mpefrip * 100)/(0.0298 * 100)" | bc)
 fi
 
+#mapqPE_READS_in_K562H3k4me3_peaks
+kme3rip=$(cat ${sample}.mapq1.PE.nodup.K562H3k4me3.rip)
+
+if [ "$MR" == "0" ]; then
+    kme3frip="NA"
+else 
+    kme3frip=$(echo "scale=4; $kme3rip/$MR" | bc)
+    foldkme3=$(echo "scale=2; ($mpefrip * 100)/(0.0235 * 100)" | bc)
+fi
+
 #Phantom peak quality metrics, if it ran
 
 if [ -s ${sample}.mapq1.PE2SE.nodup.15M.tagAlign.qc ]; then
@@ -158,5 +168,5 @@ fi
 
 
 cat ${SCRIPTDIR}/metrics_header.txt | sed 's/Expt	Sample	Ctrl	//g'
-echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup\t$g27frip\t$gme2frip\t$kme2frip\t$foldg27\t$foldgme2\t$foldk27\t$foldkme2"
+echo -e "$TR\t$MR\t$pctAn\t$mperip\t$mpefrip\t$R1C\t$R1A\t$R2C\t$R2A\t$dup\t$els\t$relSC\t$normSC\t$QT\t$MRR\t$PP\t$sing\t$mmdc\t$pdup\t$g27frip\t$gme2frip\t$kme2frip\t$kme3frip\t$foldg27\t$foldgme2\t$foldk27\t$foldkme2\t$foldkme3"
 

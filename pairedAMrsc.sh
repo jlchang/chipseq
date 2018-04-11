@@ -217,7 +217,7 @@ chr_file="/btl/projects/ChIPseq/ENCODE/data/IGV_tracks/chromosomes.txt"
 cat /btl/projects/ChIPseq/ENCODE/data/IGV_tracks/wgEncodeBroadHistoneK562H3k27acStdAln.sorted.bed | bedtools coverage -sorted -g $chr_file -a - -b ${PAIRED_MAPQ_FILE} > ${PAIRED_MAPQ_PREFIX}.H3K27ac.bedcov
 awk '{ sum += $11 } END { print sum ; }' ${PAIRED_MAPQ_PREFIX}.H3K27ac.bedcov > ${PAIRED_MAPQ_PREFIX}.H3K27ac.rip
 
-for i in Gm12878H3k27ac Gm12878H3k4me2 K562H3k4me2
+for i in Gm12878H3k27ac Gm12878H3k4me2 K562H3k4me2 K562H3k4me3
 do
     peak_path="${peak_dir}/wgEncodeBroadHistone${i}StdAln.sorted.bed"
     cat $peak_path | bedtools coverage -sorted -g $chr_file -a - -b ${PAIRED_MAPQ_FILE} > ${PAIRED_MAPQ_PREFIX}.${i}.bedcov
