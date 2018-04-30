@@ -107,7 +107,7 @@ if [ "$MR" == "0" ]; then
     g27frip="NA"
 else 
     g27frip=$(echo "scale=4; $g27rip/$MR" | bc)
-    foldg27=$(echo "scale=2; ($mpefrip * 100)/(0.0324 * 100)" | bc)
+    foldg27=$(echo "scale=2; ($g27frip * 100)/(0.0324 * 100)" | bc)
 fi
 
 #mapqPE_READS_in_Gm12878H3k4me2_peaks
@@ -117,7 +117,7 @@ if [ "$MR" == "0" ]; then
     gme2frip="NA"
 else 
     gme2frip=$(echo "scale=4; $gme2rip/$MR" | bc)
-    foldgme2=$(echo "scale=2; ($mpefrip * 100)/(0.0436 * 100)" | bc)
+    foldgme2=$(echo "scale=2; ($gme2frip * 100)/(0.0436 * 100)" | bc)
 fi
 
 #mapqPE_READS_in_K562H3k4me2_peaks
@@ -127,7 +127,7 @@ if [ "$MR" == "0" ]; then
     kme2frip="NA"
 else 
     kme2frip=$(echo "scale=4; $kme2rip/$MR" | bc)
-    foldkme2=$(echo "scale=2; ($mpefrip * 100)/(0.0298 * 100)" | bc)
+    foldkme2=$(echo "scale=2; ($kme2frip * 100)/(0.0298 * 100)" | bc)
 fi
 
 #mapqPE_READS_in_K562H3k4me3_peaks
@@ -137,7 +137,7 @@ if [ "$MR" == "0" ]; then
     kme3frip="NA"
 else 
     kme3frip=$(echo "scale=4; $kme3rip/$MR" | bc)
-    foldkme3=$(echo "scale=2; ($mpefrip * 100)/(0.0235 * 100)" | bc)
+    foldkme3=$(echo "scale=2; ($kme3frip * 100)/(0.0235 * 100)" | bc)
 fi
 
 #Phantom peak quality metrics, if it ran
